@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birthday Messenger</title>
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --primary-hover-color: #4338ca;
+            --success-color: #16a34a;
+            --success-hover-color: #15803d;
+            --warning-color: #f59e0b;
+            --warning-bg: #fffbe6;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --bg-body: #f3f4f6;
+            --bg-card: #ffffff;
+            --border-color: #e5e7eb;
+            --border-card: #d1d5db;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            margin: 0;
+            padding: 1rem;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            width: 100%;
+            max-width: 42rem;
+        }
+
+        .flex-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .header-title {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .text-muted {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .form-group input {
+            display: block;
+            width: 100%;
+            margin-top: 0.25rem;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            padding: 0.5rem 0.75rem;
+        }
+
+        .button-primary {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            padding: 0.5rem 1rem;
+            border: 1px solid transparent;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: white;
+            background-color: var(--primary-color);
+            transition: background-color 0.15s ease-in-out;
+        }
+
+        .button-primary:hover {
+            background-color: var(--primary-hover-color);
+        }
+
+        .button-green {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            border: 1px solid transparent;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            font-size: 1rem;
+            font-weight: 500;
+            color: white;
+            background-color: var(--success-color);
+            transition: background-color 0.15s ease-in-out;
+        }
+
+        .button-green:hover {
+            background-color: var(--success-hover-color);
+        }
+
+        .messages-container {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .messages-container.info {
+            background-color: var(--warning-bg);
+            color: var(--warning-color);
+        }
+
+        .messages-container.success {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .student-list {
+            margin-top: 1rem;
+            padding-top: 1rem;
+        }
+
+        .student-item {
+            background-color: #f9fafb;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 1rem;
+        }
+
+        .student-name {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .student-details {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .status-sent {
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="flex-container">
+            <h1 class="header-title">Birthday Messenger 🎉</h1>
+        </div>
+
+        <p class="text-muted">Add student birthdays here.</p>
+
+        <!-- Add Student Form -->
+        <form id="add-student-form" class="form-group">
+            <div class="space-y-4 mb-8">
+                <div>
+                    <label for="student-name">Student Name</label>
+                    <input type="text" id="student-name" required>
+                </div>
+                <div>
+                    <label for="birth-date">Birthday</label>
+                    <input type="date" id="birth-date" required>
+                </div>
+                <button type="submit" class="button-primary">
+                    Add Student
+                </button>
+            </div>
+        </form>
+
+        <!-- Birthday Check Button -->
+        <div style="text-align: center; margin-bottom: 1.5rem;">
+            <button id="check-birthdays-btn" class="button-green">
+                Check for Today's Birthdays
+            </button>
+        </div>
+
+        <!-- Messages Container -->
+        <div id="message-container" class="messages-container hidden"></div>
+
+        <!-- Students List -->
+        <h2 class="header-title" style="font-size: 1.5rem;">Student List</h2>
+        <div id="students-list" class="student-list">
+            <p class="text-muted" style="text-align: center;">No students found. Add one above!</p>
+        </div>
+    </div>
+
+    <script>
+        // HTML elements
+        const addStudentForm = document.getElementById('add-student-form');
+        const studentsList = document.getElementById('students-list');
+        const checkBirthdaysBtn = document.getElementById('check-birthdays-btn');
+        const messageContainer = document.getElementById('message-container');
+
+        // Utility function to show a temporary message
+        function showMessage(msg, type = 'info') {
+            messageContainer.textContent = msg;
+            messageContainer.className = `messages-container ${type === 'success' ? 'success' : 'info'}`;
+            messageContainer.classList.remove('hidden');
+            setTimeout(() => {
+                messageContainer.classList.add('hidden');
+            }, 5000);
+        }
+
+        // Function to save students to Local Storage
+        function saveStudents(students) {
+            try {
+                // Convert the data to a JSON string and save it to Local Storage
+                localStorage.setItem('students', JSON.stringify(students));
+                console.log('Students data saved to Local Storage.');
+            } catch (e) {
+                console.error('Error saving to Local Storage:', e);
+                showMessage("There was a problem saving the data.");
+            }
+        }
+
+        // Function to load students from Local Storage
+        function loadStudents() {
+            try {
+                // Retrieve data from Local Storage and parse it into a JSON object
+                const studentsData = localStorage.getItem('students');
+                return studentsData ? JSON.parse(studentsData) : [];
+            } catch (e) {
+                console.error('Error loading from Local Storage:', e);
+                showMessage("There was a problem loading the data.");
+                return [];
+            }
+        }
+
+        // Function to render the student list
+        function renderStudents() {
+            const students = loadStudents();
+            studentsList.innerHTML = '';
+            if (students.length === 0) {
+                studentsList.innerHTML = `<p class="text-muted" style="text-align: center;">No students found. Add one above!</p>`;
+                return;
+            }
+
+            students.forEach(student => {
+                const date = new Date(student.birthdate + 'T00:00:00');
+                const formattedDate = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+                const messageStatus = student.messageSent ? 'Message Sent ✅' : 'Message Not Sent';
+
+                const studentCard = document.createElement('div');
+                studentCard.className = 'student-item';
+                studentCard.innerHTML = `
+                    <div>
+                        <p class="student-name">${student.name}</p>
+                        <p class="student-details">Birthday: ${formattedDate}</p>
+                        <p class="student-details">Message Status: <span class="status-sent">${messageStatus}</span></p>
+                    </div>
+                `;
+                studentsList.appendChild(studentCard);
+            });
+        }
+
+        // Event listener for the add student form
+        addStudentForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const studentName = document.getElementById('student-name').value;
+            const birthDate = document.getElementById('birth-date').value;
+
+            if (!studentName || !birthDate) {
+                showMessage("Please fill in all fields.");
+                return;
+            }
+
+            const students = loadStudents();
+            students.push({
+                name: studentName,
+                birthdate: birthDate,
+                messageSent: false
+            });
+            saveStudents(students);
+            renderStudents();
+            showMessage("Student added successfully!", 'success');
+            addStudentForm.reset();
+        });
+
+        // Event listener for the birthday check button
+        checkBirthdaysBtn.addEventListener('click', () => {
+            const students = loadStudents();
+            const today = new Date();
+            const todayMonth = today.getMonth() + 1;
+            const todayDay = today.getDate();
+            let messagesSentCount = 0;
+
+            students.forEach(student => {
+                const birthdate = new Date(student.birthdate);
+                const birthMonth = birthdate.getMonth() + 1;
+                const birthDay = birthdate.getDate();
+
+                // Check if today is their birthday and a message hasn't been sent
+                if (birthMonth === todayMonth && birthDay === todayDay && !student.messageSent) {
+                    const message = `Happy Birthday, ${student.name}! 🎉🎂`;
+                    console.log(message); // Show the message in the console
+                    showMessage(message, 'success');
+                    student.messageSent = true; // Message was sent
+                    messagesSentCount++;
+                }
+            });
+
+            saveStudents(students); // Save the updates to Local Storage
+            renderStudents(); // Update the UI
+
+            if (messagesSentCount === 0) {
+                showMessage("No one has a birthday today.");
+            }
+        });
+
+        // Initial render on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            renderStudents();
+        });
+    </script>
+</body>
+</html>
